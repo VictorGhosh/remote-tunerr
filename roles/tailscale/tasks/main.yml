@@ -32,3 +32,29 @@
     name: tailscaled
     state: started
     enabled: true
+
+- name: Get Tailscale login status
+  ansible.builtin.command: tailscale status --json
+  register: tailscale_status
+  changed_when: false
+  check_mode: false
+
+- name: Read backend state from tailscale status json
+  ansible.builtin.set_fact:
+    tailscale_backend_state: "{{ (tailscale_status.stdout | from_json).BackendState }}"
+
+- name: Require auth key if tailscale is logged out
+  ansible.builtin.assert:
+    that: tailscale_authkey is defined
+    fail_msg: >-
+      tailscale is not logged in (state: {{ tailscale_backend_state }}).
+      re-run playbook with -e tailscale_authkey=
+  when: tailscale_backend_state == "NeedsLogin"
+
+- name: Log in to tailscale and advertise tuner LAN
+  ansible.builtin.command: >-
+    tailscale up
+    --authkey={{ tailscale_authkey }}
+    --advertise-routes={{ tuner_lan_cidr }}
+  when: tailscale_backend_state == "NeedsLogin"
+  no_log: true # log will print key. set to false for debugging only
