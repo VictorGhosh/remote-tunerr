@@ -1,0 +1,34 @@
+---
+- name: Download Tailscale package signing key
+  ansible.builtin.get_url:
+    url: "https://pkgs.tailscale.com/stable/debian/{{ ansible_facts['distribution_release'] }}.noarmor.gpg"
+    dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Add Tailscale apt repository
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/tailscale.sources
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      Types: deb
+      URIs: https://pkgs.tailscale.com/stable/debian
+      Suites: {{ ansible_facts['distribution_release'] }}
+      Components: main
+      Signed-By: /usr/share/keyrings/tailscale-archive-keyring.gpg
+  register: tailscale_repo
+
+- name: Install Tailscale
+  ansible.builtin.apt:
+    name: tailscale
+    state: present
+    update_cache: "{{ tailscale_repo is changed }}"
+
+- name: Keep tailscaled running and enabled at boot
+  ansible.builtin.service:
+    name: tailscaled
+    state: started
+    enabled: true
