@@ -13,3 +13,37 @@
     - { option: allow-interfaces, value: "{{ tuner_uplink_interface }}" }
     - { option: use-ipv6, value: "no" }
   notify: Restart avahi
+
+- name: Install unattended-upgrades
+  ansible.builtin.apt:
+    name: unattended-upgrades
+    state: present
+
+- name: Turn on daily package list refresh and unattended upgrades
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      APT::Periodic::Update-Package-Lists "1";
+      APT::Periodic::Unattended-Upgrade "1";
+
+- name: Allow unattended-upgrades to reboot when required
+  ansible.builtin.copy:
+    dest: /etc/apt/apt.conf.d/52unattended-upgrades-local
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      Unattended-Upgrade::Automatic-Reboot "true";
+      Unattended-Upgrade::Automatic-Reboot-Time "04:00";
+
+- name: Schedule weekly reboots
+  ansible.builtin.cron:
+    name: weekly reboot
+    user: root
+    weekday: "2"
+    hour: "3"
+    minute: "30"
+    job: /usr/bin/systemctl reboot
