@@ -1,7 +1,10 @@
 ---
 tuner_hostname: hanuman
 
-# Private LAN Pi <> HDHomeRun via USB ethernet
+# Uplink via onboard ethernet
+tuner_uplink_interface: eth0
+
+# Private LAN Pi <> HDHomeRun via usb ethernet
 tuner_lan_interface: tunerlan0
 tuner_lan_address: 10.77.0.1
 tuner_lan_prefix: 24

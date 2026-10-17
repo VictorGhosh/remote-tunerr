@@ -4,6 +4,7 @@
   become: true
 
   roles:
+    - base # basic setup. acahi only uplink ipv4. fixes hostname-2 rename bug
     - network # setup tuner network and label usb interface to seperate from WAN
     - dnsmasq # setup tuner dhcp server and assign the tuners IP
     - tailscale # install and enable tailscaled

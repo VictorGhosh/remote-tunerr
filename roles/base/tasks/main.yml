@@ -1,0 +1,15 @@
+---
+- name: Limit avahi dns to the uplink and ipv4 only
+  community.general.ini_file:
+    path: /etc/avahi/avahi-daemon.conf
+    section: server
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    no_extra_spaces: true
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - { option: allow-interfaces, value: "{{ tuner_uplink_interface }}" }
+    - { option: use-ipv6, value: "no" }
+  notify: Restart avahi
