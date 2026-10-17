@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+# DHCP only no dns server
+port=0
+
+# Only serve tuner LAN not uplink
+interface={{ tuner_lan_interface }}
+bind-dynamic
+
+dhcp-range={{ tuner_lan_dhcp_start }},{{ tuner_lan_dhcp_end }},12h
+dhcp-host={{ tuner_hdhr_mac }},{{ tuner_hdhr_address }}

@@ -5,4 +5,5 @@
 
   roles:
     - network
+    - dnsmasq
 
