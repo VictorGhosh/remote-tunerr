@@ -1,0 +1,12 @@
+---
+- name: Install Prometheus node exporter
+  ansible.builtin.apt:
+    name: prometheus-node-exporter
+    state: present
+    install_recommends: false
+
+- name: Keep node exporter running and enabled at boot
+  ansible.builtin.service:
+    name: prometheus-node-exporter
+    state: started
+    enabled: true

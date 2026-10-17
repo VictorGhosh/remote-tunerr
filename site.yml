@@ -8,4 +8,4 @@
     - network # setup tuner network and label usb interface to seperate from WAN
     - dnsmasq # setup tuner dhcp server and assign the tuners IP
     - tailscale # install and enable tailscaled
-
+    - node_exporter # metrics on :9100 scrape over tailscale
