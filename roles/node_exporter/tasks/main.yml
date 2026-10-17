@@ -10,3 +10,34 @@
     name: prometheus-node-exporter
     state: started
     enabled: true
+
+- name: Install HDHomeRun status exporter script
+  ansible.builtin.copy:
+    src: hdhomerun-textfile.py
+    dest: /usr/local/bin/hdhomerun-textfile.py
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install HDHomeRun exporter service
+  ansible.builtin.template:
+    src: hdhomerun-textfile.service.j2
+    dest: /etc/systemd/system/hdhomerun-textfile.service
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Install HDHomeRun exporter service timer
+  ansible.builtin.copy:
+    src: hdhomerun-textfile.timer
+    dest: /etc/systemd/system/hdhomerun-textfile.timer
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Run HDHomeRun exporter every 15 seconds
+  ansible.builtin.systemd_service:
+    name: hdhomerun-textfile.timer
+    state: started
+    enabled: true
+    daemon_reload: true

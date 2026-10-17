@@ -1,0 +1,8 @@
+# Managed by ansible
+[Unit]
+Description=Export HDHomeRun tuner status for node_exporter
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/hdhomerun-textfile.py http://{{ tuner_hdhr_address }}/status.json
