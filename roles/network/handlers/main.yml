@@ -1,0 +1,7 @@
+---
+- name: Reboot to apply interface rename
+  ansible.builtin.reboot:
+    msg: "Rebooting to apply tuner LAN interface rename"
+
+- name: Activate tuner LAN
+  ansible.builtin.command: nmcli connection up tuner-lan

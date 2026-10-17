@@ -1,0 +1,35 @@
+---
+- name: Give tuner LAN adapter stable name via MAC
+  ansible.builtin.template:
+    src: 10-tuner-lan.link.j2
+    dest: /etc/systemd/network/10-tuner-lan.link
+    owner: root
+    group: root
+    mode: "0644" 
+  notify: Reboot to apply interface rename
+
+- name: Configure tuner LAN with a static address
+  community.general.nmcli:
+    conn_name: tuner-lan
+    type: ethernet
+    ifname: "{{ tuner_lan_interface }}"
+    ip4: "{{ tuner_lan_address }}/{{ tuner_lan_prefix }}"
+    method4: manual
+    method6: disabled
+    never_default4: true
+    autoconnect: true
+    state: present
+  notify: Activate tuner LAN
+
+- name: Remove auto-created profile for the tuner adapter
+  community.general.nmcli:
+    conn_name: Wired connection 2
+    state: absent
+
+- name: Enable IP forwarding so the Pi can route between Tailscale and the tuner LAN
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_file: /etc/sysctl.d/99-tailscale.conf
+    sysctl_set: true
+    state: present

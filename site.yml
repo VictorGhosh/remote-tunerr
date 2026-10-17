@@ -1,0 +1,8 @@
+---
+- name: Configure remote tuner Pi
+  hosts: tuner
+  become: true
+
+  roles:
+    - network
+

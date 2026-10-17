@@ -1,0 +1,4 @@
+---
+# mac addresses
+tuner_lan_adapter_mac: "AA:BB:CC:DD:EE:FF"
+tuner_hdhr_mac: "AA:BB:CC:DD:EE:FF"
