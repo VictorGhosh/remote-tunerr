@@ -27,7 +27,7 @@ All values are in group_vars/all.yml. Change them per site so the networks don't
 ├── group_vars
 │   └── all.yml                 # Set private HDHomeRun network; must not overlap
 ├── host_vars
-│   └── hanuman.yml             # Set usb adapter and HDHomeRun MACs
+│   └── tuner_pi.yml            # Set usb adapter and HDHomeRun MACs
 ├── inventory.ini               # Set remote hostname
 ├── monitoring
 │   └── grafana
@@ -86,7 +86,7 @@ coming soon...
 ### steps
 
 1. Flash Raspberry Pi OS Lite with hostname, user and SSH key set. Boot it on your LAN and  ssh `<user>@<hostname>.local` once to accept the host key
-2. Fill out `host_vars/hanuman.yml` using the exmaple
+2. Fill out `host_vars/tuner_pi.yml` using the example
 3. Set the host in `inventory.ini`.
 4. First run (the Pi isn't on Tailscale yet): `ansible-playbook site.yml -K -e ansible_host=<hostname>.local -e tailscale_authkey=<your key>` The Pi will reboot
 5. On tailscale admin console: approve the route, disable key expiry

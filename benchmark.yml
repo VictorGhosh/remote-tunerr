@@ -1,0 +1,24 @@
+---
+- name: Start iperf3 server on tuner pi
+  hosts: tuner
+  become: true
+  tasks:
+    - name: Start iperf3
+      ansible.builtin.systemd_service:
+        name: iperf3
+        state: started
+
+- name: Run the benchmark from the tester
+  hosts: tester
+  roles:
+    - benchmark
+
+- name: Stop iperf3 server on tuner pi
+  hosts: tuner
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Stop iperf3
+      ansible.builtin.systemd_service:
+        name: iperf3
+        state: stopped

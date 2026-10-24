@@ -1,0 +1,5 @@
+---
+- name: install iperf3 for benchmarking
+  ansible.builtin.apt:
+    name: iperf3
+    state: present

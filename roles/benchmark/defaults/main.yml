@@ -1,0 +1,6 @@
+---
+# Where benchmark container temp files will live on testing server
+benchmark_work_parent: /mnt/user/appdata # unraid
+
+# Marker file in the tuner Pi's node exporter textfile directory; exists only while a benchmark runs
+benchmark_marker_file: /var/lib/prometheus/node-exporter/tuner_benchmark.prom

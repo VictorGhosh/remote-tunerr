@@ -1,6 +1,4 @@
 ---
-tuner_hostname: hanuman
-
 # Uplink via onboard ethernet
 tuner_uplink_interface: eth0
 

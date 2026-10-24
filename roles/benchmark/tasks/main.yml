@@ -1,0 +1,75 @@
+---
+- name: Run benchmark in a container
+  block:
+    - name: Create a temp directory in appdata
+      ansible.builtin.tempfile:
+        state: directory
+        path: "{{ benchmark_work_parent }}"
+        prefix: tuner-bench.
+      register: bench_dir
+
+    - name: Copy benchmark program
+      ansible.builtin.copy:
+        src: benchmark.py
+        dest: "{{ bench_dir.path }}/benchmark.py"
+
+    - name: Mark the benchmark as running on the tuner Pi
+      ansible.builtin.copy:
+        content: "tuner_benchmark_running 1\n"
+        dest: "{{ benchmark_marker_file }}"
+        mode: "0644"
+      delegate_to: "{{ groups['tuner'][0] }}"
+      become: true
+
+    - name: Run benchmark
+      ansible.builtin.command:
+        argv:
+          - docker
+          - run
+          - --rm
+          - --name
+          - tuner-benchmark
+          - -v
+          - "{{ bench_dir.path }}:/work"
+          - -w
+          - /work
+          - python:3.13-slim
+          - sh
+          - -c
+          - >-
+            export DEBIAN_FRONTEND=noninteractive &&
+            apt-get update -qq && apt-get install -y -qq iperf3 > /dev/null &&
+            python benchmark.py {{ tuner_hdhr_address }}
+            {{ hostvars[groups['tuner'][0]]['ansible_facts']['tailscale0']['ipv4']['address'] }}
+      register: bench_run
+
+    - name: Print benchmark register stdout
+      ansible.builtin.debug:
+        var: bench_run.stdout_lines
+
+    - name: Fetch results
+      ansible.builtin.fetch:
+        src: "{{ bench_dir.path }}/{{ item }}"
+        dest: "benchmarks/{{ ansible_facts['date_time']['iso8601_basic_short'] }}/"
+        flat: true
+      loop:
+        - results.json
+        - lineup.json
+
+  always:
+    - name: Remove work directory
+      ansible.builtin.file:
+        path: "{{ bench_dir.path }}"
+        state: absent
+      when: bench_dir.path is defined
+
+    - name: Remove python image
+      ansible.builtin.command: docker image rm python:3.13-slim
+      failed_when: false
+
+    - name: Remove the benchmark marker on the tuner Pi
+      ansible.builtin.file:
+        path: "{{ benchmark_marker_file }}"
+        state: absent
+      delegate_to: "{{ groups['tuner'][0] }}"
+      become: true
