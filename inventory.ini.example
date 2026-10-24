@@ -1,0 +1,6 @@
+[tuner]
+tuner_pi ansible_host= ansible_user=
+
+# Only needed if benchmarking
+[tester]
+bench_server ansible_host= ansible_user=root

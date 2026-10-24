@@ -1,3 +1,4 @@
 __pycache__/
 host_vars/*.yml
 benchmarks/
+inventory.ini
