@@ -24,50 +24,31 @@ All values are in group_vars/all.yml. Change them per site so the networks don't
 
 ```
 ├── ansible.cfg
-├── group_vars
-│   └── all.yml                 # Set private HDHomeRun network; must not overlap
-├── host_vars
-│   └── tuner_pi.yml            # Set usb adapter and HDHomeRun MACs
+├── benchmarks                  # Holds benchmark results
+├── benchmark.yml               # Run benchmark script playbook
+├── grafana                     # Custom monitoring dashboard
+├── group_vars                  # Set private HDHomeRun network; must not overlap
+├── host_vars                   # Set usb adapter and HDHomeRun MAC addresses
 ├── inventory.ini               # Set remote hostname
-├── monitoring
-│   └── grafana
-│       └── remote-tunerr.json  # Custom dashboard should run on media server
 ├── roles
 │   ├── base                    # Configure avahi, unattended upgrades, and reboots
-│   │   ├── handlers
-│   │   │   └── main.yml
-│   │   └── tasks
-│   │       └── main.yml
+│   ├── benchmark
+│   │   └── defaults            # Set the path for server benchmark container temp files
 │   ├── dnsmasq                 # Configure dnsmasq to handle DHCP on tuner network
-│   │   ├── handlers
-│   │   │   └── main.yml
-│   │   ├── tasks
-│   │   │   └── main.yml
-│   │   └── templates
-│   │       └── tuner-lan.conf.j2
+│   ├── iperf3                  # Install iperf3 on Pi, only running or used during benchmarking
 │   ├── network                 # Configure network for both interfaces, rename
-│   │   ├── handlers
-│   │   │   └── main.yml
-│   │   ├── tasks
-│   │   │   └── main.yml
-│   │   └── templates
-│   │       └── 10-tuner-lan.link.j2
 │   ├── node_exporter           # Configure stats from both the Pi and the tuner as text
-│   │   ├── files
-│   │   │   ├── hdhomerun-textfile.py
-│   │   │   └── hdhomerun-textfile.timer
-│   │   ├── tasks
-│   │   │   └── main.yml
-│   │   └── templates
-│   │       └── hdhomerun-textfile.service.j2
 │   └── tailscale               # Configure and authenticate to tailscale network
-│       └── tasks
-│           └── main.yml
-└── site.yml                    # Main entry
+└── site.yml                    # Main setup playbook               
 ```
 
-## testing
-coming soon...
+## testing and monitoring
+
+the benchmark playbook will create start the iperf3 server on the Pi, and create a temporary container on the media server. We run a latency test, bandwidth test, and then incremental stream tests. To simulate load it starts one stream to the media server, analyzes the output for loss, waits 60 seconds, then starts two concurrent streams. This goes on until we tests all tuners being in use at the same time. Finnaly the iperf3 server is stopped and the temporary container and files are removed from the media server. You can view results in benchmarks/ and see live stats using the dashboard
+
+<p align="center">
+  <img src=".images/grafana_during_benchmark.png" alt="Grafana dashboard during a benchmark run">
+</p>
 
 ## setup
 
@@ -106,7 +87,6 @@ If the Pi is logged out of Tailscale, the play stops and asks for `-e tailscale_
 ## TODO
 
 - Benchmarking
-- Hanuman is my Pi's name, should be removed from this repo for clarity
 - `roles/network` removes the NetworkManager profile `Wired connection 2` by name.
 - Clear error for a missing `host_vars` file
 - Wifi backup uplink?

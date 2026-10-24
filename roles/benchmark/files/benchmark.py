@@ -88,6 +88,8 @@ def analyze(ts_file: Path) -> dict:
                     continue
                 if pkt[1] & 0x80: # transport_error_indicator: tuner saw a bad packet
                     transport_errors += 1
+                    last_cc.clear() # header can't be trusted; restart the counter check
+                    continue
 
                 pid = ((pkt[1] & 0x1F) << 8) | pkt[2]
                 if pid == 0x1FFF: # null packets have no counter
