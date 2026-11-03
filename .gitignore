@@ -1,4 +1,8 @@
 __pycache__/
 host_vars/*.yml
-benchmarks/
+# Keep only the obfuscated benchmark results
+benchmarks/**
+!benchmarks/*/
+!benchmarks/*/results.obfuscated.json
 inventory.ini
+*.swp

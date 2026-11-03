@@ -1,0 +1,106 @@
+{
+    "channels": [
+        "censored-1",
+        "censored-2",
+        "censored-3",
+        "censored-4"
+    ],
+    "pretest": {
+        "latency_ms_min": 25.9,
+        "latency_ms_avg": 29.3,
+        "latency_ms_max": 36.3,
+        "bandwidth_mbps": 81.2
+    },
+    "rounds": [
+        {
+            "streams": 1,
+            "channel": "censored-1",
+            "mbps": 5.16,
+            "packets": 1030052,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 2,
+            "channel": "censored-1",
+            "mbps": 5.55,
+            "packets": 1107390,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 2,
+            "channel": "censored-2",
+            "mbps": 6.04,
+            "packets": 1204345,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 3,
+            "channel": "censored-1",
+            "mbps": 5.09,
+            "packets": 1014837,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 3,
+            "channel": "censored-2",
+            "mbps": 7.31,
+            "packets": 1457468,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 3,
+            "channel": "censored-3",
+            "mbps": 6.55,
+            "packets": 1306667,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 4,
+            "channel": "censored-1",
+            "mbps": 4.73,
+            "packets": 943187,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 4,
+            "channel": "censored-2",
+            "mbps": 5.96,
+            "packets": 1189076,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 4,
+            "channel": "censored-3",
+            "mbps": 6.55,
+            "packets": 1306123,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        },
+        {
+            "streams": 4,
+            "channel": "censored-4",
+            "mbps": 2.42,
+            "packets": 483170,
+            "sync_errors": 0,
+            "transport_errors": 0,
+            "discontinuities": 0
+        }
+    ]
+}
